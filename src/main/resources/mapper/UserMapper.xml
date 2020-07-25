@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.lanqiao.dao.UserDao">
+<!--    HashMap类型 配置-->
+<!--    <resultMap id="UserMap" type="org.lanqiao.model.User">-->
+<!--        <id property="userId" column="userid" javaType="VARCHAR"></id>-->
+<!--        <result property="userName" column="username" javaType="VARCHAR"></result>-->
+<!--        <result property="userPassword" column="userpassword" javaType="VARCHAR"></result>-->
+<!--    </resultMap>-->
+<!-- 查询所有-->
+    <select id="queryall"  resultType="org.lanqiao.model.User">
+    select *
+    from user
+    where 1=1
+        <if test="username !=null and username !=''">
+            AND username = #{username}
+        </if>
+        <if test="telephone !=null and telephone !=''">
+            AND telephone = #{telephone}
+        </if>
+        <if test="status !=null">
+            AND status = #{status}
+        </if>
+  </select>
+    <!-- 根据id查询用户-->
+    <select id="queryUserById"  resultType="org.lanqiao.model.User">
+    select *
+    from user
+    where userId=#{userId}
+  </select>
+<!--&lt;!&ndash;查询单条记录&ndash;&gt;-->
+<!--    <select id="selectUserByid"  resultType="org.lanqiao.model.User">-->
+<!--    select userId as userId,-->
+<!--    userName as userName,-->
+<!--     userpassword as userPassword,-->
+<!--    usertelephone as userTelphone-->
+<!--    from users-->
+<!--    where userid=#{id,jdbcType=VARCHAR}-->
+<!--  </select>-->
+<!--&lt;!&ndash;删除一条记录&ndash;&gt;-->
+<!--    <delete id="deleteByid">-->
+<!--   delete from users-->
+<!--    where userid=#{id,jdbcType=VARCHAR}-->
+<!--  </delete>-->
+<!--注册用户-->
+    <insert id="userAdd"  parameterType="org.lanqiao.model.User">
+   insert into user(userId,username,password,sex,telephone,userCard,status,power)
+   values (#{userId},#{username},#{password},#{sex},#{telephone},#{userCard},#{status},#{power})
+  </insert>
+    <!--注册时检查用户名是否重复-->
+    <select id="queryUsername"  parameterType="hashMap" resultType="org.lanqiao.model.User">
+    select *
+    from user
+    where username=#{username,jdbcType=VARCHAR}
+  </select>
+
+<!--登录-->
+    <select id="queryLogin"  parameterType="hashMap" resultType="org.lanqiao.model.User">
+    select *
+    from user
+    where username=#{username,jdbcType=VARCHAR} and password=#{password,jdbcType=VARCHAR} and power=#{power} and status=1
+  </select>
+<!--修改用户-->
+    <update id="updateUser"  parameterType="org.lanqiao.model.User">
+   update user
+   <set>
+       <if test="img != null and img !=''">
+           img=#{img},
+       </if>
+       <if test="username != null and username !=''">
+           username=#{username},
+       </if>
+       <if test="password != null and password !=''">
+           password=#{password},
+       </if>
+       <if test="sex != null and sex !=''">
+           sex=#{sex},
+       </if>
+       <if test="telephone != null and telephone !=''">
+           telephone=#{telephone},
+       </if>
+       <if test="userCard != null and userCard !=''">
+           userCard=#{userCard},
+       </if>
+       <if test="status != null and status !=''">
+           status=#{status},
+       </if>
+       <if test="power != null and power !=''">
+           power=#{power}
+       </if>
+   </set>
+   where
+   userId=#{userId}
+  </update>
+<!--    逻辑删除用户-->
+    <update id="deleteUser"  parameterType="org.lanqiao.model.User">
+        update user
+        set status=0
+        where
+        userId=#{userId}
+    </update>
+    <!--    修改头像-->
+    <update id="photo"  parameterType="org.lanqiao.model.User">
+        update user
+        set img=#{img}
+        where
+       userId=#{userId}
+    </update>
+<!--&lt;!&ndash;    删除用户&ndash;&gt;-->
+<!--    <update id="userDele" >-->
+<!--   update  users set userstatus=0-->
+<!--    where userid=#{userId,jdbcType=VARCHAR}-->
+<!--  </update>-->
+<!--&lt;!&ndash;    <select id="select"  parameterType="hashMap" resultMap="UserMap">&ndash;&gt;-->
+<!--&lt;!&ndash;    select * from users&ndash;&gt;-->
+<!--&lt;!&ndash;  </select>&ndash;&gt;-->
+<!--&lt;!&ndash;    查询用户权限&ndash;&gt;-->
+<!--&lt;!&ndash;    <resultMap id="ResultMap" type="org.lanqiao.model.Power">&ndash;&gt;-->
+<!--&lt;!&ndash;        <id property="powerId" column="pfId" ></id>&ndash;&gt;-->
+<!--&lt;!&ndash;        <result property="powerName" column="pfName" ></result>&ndash;&gt;-->
+<!--&lt;!&ndash;        <collection property="powerChild" ofType="org.lanqiao.model.Power">&ndash;&gt;-->
+<!--&lt;!&ndash;            <id property="powerId" column="sId" ></id>&ndash;&gt;-->
+<!--&lt;!&ndash;            <result property="powerName" column="sName" ></result>&ndash;&gt;-->
+<!--&lt;!&ndash;        </collection>&ndash;&gt;-->
+<!--&lt;!&ndash;    </resultMap>&ndash;&gt;-->
+<!--    <select id="userPower" resultType="org.lanqiao.model.Power">-->
+<!--SELECT-->
+<!--	p.*-->
+<!--FROM-->
+<!--	users u-->
+<!--	LEFT JOIN user_role ur ON u.userId = ur.userId-->
+<!--	LEFT JOIN role r ON ur.roleId = r.roleId-->
+<!--	LEFT JOIN role_power rp ON ur.roleId = rp.roleId-->
+<!--	LEFT JOIN power p ON rp.powerId = p.powerId-->
+<!--where u.userId=#{userId,jdbcType=VARCHAR}-->
+
+<!--</select>-->
+
+<!--&lt;!&ndash;    <select id="roleall"  resultType="org.lanqiao.model.Role">&ndash;&gt;-->
+<!--&lt;!&ndash;    select *&ndash;&gt;-->
+<!--&lt;!&ndash;    from role&ndash;&gt;-->
+<!--&lt;!&ndash;  </select>&ndash;&gt;-->
+
+</mapper>

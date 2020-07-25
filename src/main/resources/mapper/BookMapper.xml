@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.lanqiao.dao.BookDao">
+<!--    HashMap类型 配置-->
+<!--    <resultMap id="UserMap" type="org.lanqiao.model.User">-->
+<!--        <id property="userId" column="userid" javaType="VARCHAR"></id>-->
+<!--        <result property="userName" column="username" javaType="VARCHAR"></result>-->
+<!--        <result property="userPassword" column="userpassword" javaType="VARCHAR"></result>-->
+<!--    </resultMap>-->
+<!-- 查询所有-->
+    <select id="queryall"  resultType="org.lanqiao.model.Book">
+    select *
+    from book
+    where status=1
+  </select>
+    <!-- 根据类别查询图书-->
+    <select id="queryBookByLb"  resultType="org.lanqiao.model.Book">
+    select *
+    from book
+    where category=#{category} and status =1
+  </select>
+    <!-- 根据书名查询图书-->
+    <select id="queryBookByName"  resultType="org.lanqiao.model.Book">
+    select *
+    from book
+    where bookName=#{bookName}
+    </select>
+    <!-- 查询id查询图书-->
+    <select id="queryBookById"  resultType="org.lanqiao.model.Book">
+    select *
+    from book
+    where bookId=#{bookId}
+  </select>
+    <!--新增图书-->
+    <insert id="bookAdd"  parameterType="org.lanqiao.model.Book">
+   insert into book(bookId,category,bookName,bookImg,comment,place,price,rentPrice,status,bookNum,author,imgStatus)
+   values
+   (#{bookId},
+   #{category},
+   #{bookName},
+   #{bookImg},
+   #{comment},
+   #{place},
+   #{price},
+   #{rentPrice},
+   #{status},
+   #{bookNum},
+   #{author},
+   #{imgStatus})
+  </insert>
+<!--    查询图书是否有货以及下架的图书，0缺货，1少货-->
+    <select id="queryList"  resultType="org.lanqiao.model.Book">
+    select *
+    from book
+    where 1=1
+        <if test="isLack == 0">
+            AND bookNum = 0
+        </if>
+        <if test="isLack == 1 ">
+            AND bookNum &lt;= 10
+        </if>
+        <if test="status !=null and status !='' ">
+            AND status=#{status}
+        </if>
+  </select>
+    <!--    下架图书和上架图书 1为上架，0为下架-->
+    <update id="upBook"  parameterType="org.lanqiao.model.User">
+        update book
+        set status=#{status}
+        where
+        bookId=#{bookId}
+    </update>
+    <!--修改图书-->
+    <update id="updateBook"  parameterType="org.lanqiao.model.Book">
+        update book
+        <set>
+            <if test="category != null and category !=''">
+                category=#{category},
+            </if>
+            <if test="bookName != null and bookName !=''">
+                bookName=#{bookName},
+            </if>
+            <if test="bookImg != null and bookImg !=''">
+                bookImg=#{bookImg},
+            </if>
+            <if test="comment != null and comment !=''">
+                comment=#{comment},
+            </if>
+            <if test="place != null and place !=''">
+                place=#{place},
+            </if>
+            <if test="price != null and price !=''">
+                price=#{price},
+            </if>
+            <if test="rentPrice != null and rentPrice !=''">
+                rentPrice=#{rentPrice},
+            </if>
+            <if test="bookNum != null and bookNum !=''">
+                bookNum=#{bookNum},
+            </if>
+            <if test="author != null and author !=''">
+                author=#{author},
+            </if>
+            <if test="imgStatus != null">
+                imgStatus=#{imgStatus}
+            </if>
+        </set>
+        where
+        bookId=#{bookId}
+    </update>
+<!--    修改图片-->
+    <update id="photo"  parameterType="org.lanqiao.model.Book">
+        update book
+        set bookImg=#{bookImg}
+        where
+       bookId=#{bookId}
+    </update>
+
+</mapper>

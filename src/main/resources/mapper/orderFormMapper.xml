@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.lanqiao.dao.orderFormDao">
+	<!--    HashMap类型 配置-->
+	<!--    <resultMap id="UserMap" type="org.lanqiao.model.User">-->
+	<!--        <id property="userId" column="userid" javaType="VARCHAR"></id>-->
+	<!--        <result property="userName" column="username" javaType="VARCHAR"></result>-->
+	<!--        <result property="userPassword" column="userpassword" javaType="VARCHAR"></result>-->
+	<!--    </resultMap>-->
+
+	<!--下单-->
+	<insert id="orderAdd"  parameterType="org.lanqiao.model.orderForm">
+   insert into orderForm(orderId,userId,bookId,bookNames,rentTime,rentNum,buyNum,totalPrice,orderStatus,orderTime,returnTime,bookImg,flag)
+   values
+   (#{orderId},
+   #{userId},
+   #{bookId},
+   #{bookNames},
+   #{rentTime},
+   #{rentNum},
+   #{buyNum},
+   #{totalPrice},
+   #{orderStatus},
+   #{orderTime},
+   #{returnTime},
+   #{bookImg},
+   #{flag}
+   )
+  </insert>
+    <!-- 查询所有-->
+    <select id="queryall"  resultType="org.lanqiao.model.orderForm">
+    select *
+    from orderForm
+    where orderStatus=1
+  </select>
+<!-- 多条件查询-->
+    <select id="queryList"  resultType="org.lanqiao.model.orderForm">
+    select *
+    from orderForm
+    where 1=1
+        <if test="userId !=null and userId !=''">
+            AND userId = #{userId}
+        </if>
+        <if test="orderId !=null and orderId !=''">
+            AND orderId = #{orderId}
+        </if>
+        <if test="flag !=null and flag !=''">
+            AND flag = #{flag}
+        </if>
+  </select>
+    <!-- 删除订单-->
+    <delete id="deleteOrder"  parameterType="org.lanqiao.model.orderForm">
+    delete
+    from orderForm
+    where orderId=#{orderId}
+  </delete>
+    <!--归还图书-->
+    <update id="returnBook"  parameterType="org.lanqiao.model.orderForm">
+        update orderForm
+        set flag='已还'
+        where
+        orderId=#{orderId}
+    </update>
+</mapper>
